@@ -1,9 +1,14 @@
 import React, { useState } from "react";
-import { Input, Button, Alert } from "antd";
+import { Input, Button, Alert, Card, Space } from "antd";
 import "./Checkin.css";
 const CheckIn = () => {
   // Name, License plate ID, Phone, Ticket type, Vehicle type, Vehicle height, Vehicle width, Vehicle length.
-  const ticketsType = ["VIP", "Value", "Regular"];
+  const tickets = {
+    VIP: { type: "VIP", Price: 200 },
+    Value: { type: "Value", Price: 100 },
+    Regular: { type: "Regular", Price: 50 },
+  };
+
   const vehiclesType = [
     "Motorcycle",
     "Private",
@@ -46,10 +51,10 @@ const CheckIn = () => {
     if (formData.Phone === "") {
       newErrors.Phone = "Phone is required";
     }
-    if (!ticketsType.includes(formData.TicketType)) {
-      newErrors.TicketType = `ticket Type has to be equeal to: ${ticketsType.join(
-        " | "
-      )}`;
+    if (!(formData.TicketType in tickets)) {
+      newErrors.TicketType = `ticket Type has to be equeal to: ${Object.keys(
+        tickets
+      ).join(" | ")}`;
     }
 
     if (!vehiclesType.includes(formData.VehicleType)) {
@@ -72,35 +77,55 @@ const CheckIn = () => {
     validation();
   };
   return (
-    <div className='checkin_container'>
+    <div className='center_page'>
       <h1>Check in vehicle</h1>
-      {Object.keys(formData).map((fieldName) => (
-        <>
-          <Input
-            className={errors[fieldName] ? "" : "form_fields"}
-            key={fieldName}
-            type='text'
-            name={fieldName}
-            value={formData[fieldName]}
-            onChange={handleInputChange}
-            placeholder={fieldName}
-            status={errors[fieldName] ? "error" : undefined}
-          />
-          {errors[fieldName] && (
-            <Alert
-              className='form_fields'
-              message={errors[fieldName]}
-              type='error'
-              showIcon
-            />
-          )}
-        </>
-      ))}
-      <Button
-        className='checkIn_button'
-        onClick={submitForm}>
-        CheckIn
-      </Button>
+      <div className='checkin_container'>
+        <span className='form_container'>
+          {Object.keys(formData).map((fieldName) => (
+            <>
+              <Input
+                className={errors[fieldName] ? "" : "form_fields"}
+                key={fieldName}
+                type='text'
+                name={fieldName}
+                value={formData[fieldName]}
+                onChange={handleInputChange}
+                placeholder={fieldName}
+                status={errors[fieldName] ? "error" : undefined}
+              />
+              {errors[fieldName] && (
+                <Alert
+                  className='form_fields'
+                  message={errors[fieldName]}
+                  type='error'
+                  showIcon
+                />
+              )}
+            </>
+          ))}
+
+          <Button
+            className='checkIn_button'
+            onClick={submitForm}>
+            CheckIn
+          </Button>
+        </span>
+        <span className='cards_container'>
+          <Space
+            direction='vertical'
+            size={16}>
+            <Card
+              title='tickets Price'
+              style={{ width: 300 }}>
+              {Object.values(tickets).map((ticket) => {
+                return (
+                  <p>{`Ticket type: ${ticket.type} cost: ${ticket.Price}$`}</p>
+                );
+              })}
+            </Card>
+          </Space>
+        </span>
+      </div>
     </div>
   );
 };
