@@ -10,6 +10,6 @@ public class GarageController : ControllerBase
     [HttpPost("/checkIn/{LicensePlateID}")]
     public async Task<IActionResult> CheckInVehicle([FromBody] VehicleModel vehicle)
     {
-        return Ok();
+        return Ok("hi");
     }
 }
