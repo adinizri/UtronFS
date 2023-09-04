@@ -17,7 +17,9 @@ namespace Server.Migrations
                 {
                     LicensePlateID = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     ParkingDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    LotNumber = table.Column<int>(type: "int", nullable: false)
+                    LotNumber = table.Column<int>(type: "int", nullable: false),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {

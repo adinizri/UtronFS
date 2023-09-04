@@ -14,4 +14,10 @@ public class ParkingRecord
 
     [Required]
     public int LotNumber { get; set; }
+
+    [Required]
+    public string PhoneNumber { get; set; }
+
+    [Required]
+    public string Name { get; set; }
 }

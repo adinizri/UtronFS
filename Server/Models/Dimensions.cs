@@ -18,7 +18,7 @@ namespace Server.Models
         public static bool ValidateVehicleDimensions(
             Dimensions vehicleDimensions,
             Dimensions dimensions,
-            Consts.TicketTypes ticketType
+            string ticketType
         )
         {
             if (ticketType != Consts.TicketTypes.VIP)

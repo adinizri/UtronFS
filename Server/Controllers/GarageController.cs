@@ -1,30 +1,97 @@
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Server.Models;
 using Server.Utils;
-using SQLitePCL;
 
 namespace Server.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("api/[controller]")]
 public class GarageController : ControllerBase
 {
     private readonly UtronDbContext _context;
+    private readonly GarageModel _garage;
 
     public GarageController(UtronDbContext context)
     {
         _context = context;
+        _garage = new(_context);
     }
 
-    [HttpPost("/checkIn/{LicensePlateID}")]
+    // adding vehicle to db
+
+    [HttpPost("checkIn")]
     public async Task<IActionResult> CheckInVehicle([FromBody] VehicleModel vehicle)
     {
-        return Ok(await Garage.GetFreeParkingLotByTicketType(Consts.TicketTypes.VIP, _context));
+        try
+        {
+            ParkingRecord pr = await _garage.CheckInVehicle(vehicle);
+            if (pr == null)
+                return BadRequest();
+            return Ok(pr);
+        }
+        catch (Exception ex)
+        {
+            throw;
+        }
     }
 
-    [HttpGet("/checkIn")]
-    public async Task<IActionResult> GetFreeParkingLots()
+    // delete vehicle to db
+
+    [HttpDelete("checkout/{LicensePlateID}")]
+    public async Task<IActionResult> CheckoutVehicle(string licensePlateID)
     {
-        return Ok(await Garage.GetFreeParkingLotByTicketType(Consts.TicketTypes.VIP, _context));
+        try
+        {
+            ParkingRecord parkingRecord = await _garage.CheckoutVehicle(licensePlateID);
+            if (parkingRecord != null)
+                return Ok(parkingRecord);
+            return NotFound(parkingRecord);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex);
+        }
+    }
+
+    [HttpGet("getSuitableTicket")] // add dimenstions
+    public async Task<IActionResult> GetVeicleTicketsOptions()
+    {
+        Dimensions d = new(10000, 1000, 1000);
+        try
+        {
+            return Ok(await _garage.GetSuitableTicketByDimenetions(d));
+        }
+        catch (Exception ex)
+        {
+            throw;
+        }
+    }
+
+    [HttpGet("ticketParkingCars/{ticketType}")]
+    public async Task<IActionResult> GetParkingCarsByTicket(string ticketType)
+    {
+        try
+        {
+            return Ok(await _garage.GetParkingCarsByTicket(ticketType));
+        }
+        catch (Exception ex)
+        {
+            throw;
+        }
+    }
+
+    [HttpGet("garageStatus")]
+    public async Task<IActionResult> GetGarageStatus()
+    {
+        try
+        {
+            return Ok(await _garage.GetGarageStatus());
+        }
+        catch (Exception ex)
+        {
+            throw;
+        }
     }
 }

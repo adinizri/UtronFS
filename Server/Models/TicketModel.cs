@@ -4,20 +4,20 @@ namespace Server.Models;
 
 public class Ticket
 {
-    public Consts.TicketTypes Type { get; set; }
+    public string Type { get; set; }
     public int StartLot { get; set; }
     public int EndLot { get; set; }
     public Dimensions Dimensions { get; set; }
-    public Consts.VehicleClass[] VehicleClasses { get; set; }
+    public string[] VehicleClasses { get; set; }
     public int Cost { get; set; }
     public int TimeLimits { get; set; }
 
     public Ticket(
-        Consts.TicketTypes type,
+        string type,
         int startLot,
         int endLot,
         Dimensions dimensions,
-        Consts.VehicleClass[] vehicleClasses,
+        string[] vehicleClasses,
         int cost,
         int timeLimits
     )

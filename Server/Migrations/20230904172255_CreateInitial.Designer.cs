@@ -12,7 +12,7 @@ using Server.Db;
 namespace Server.Migrations
 {
     [DbContext(typeof(UtronDbContext))]
-    [Migration("20230903201650_CreateInitial")]
+    [Migration("20230904172255_CreateInitial")]
     partial class CreateInitial
     {
         /// <inheritdoc />
@@ -33,8 +33,16 @@ namespace Server.Migrations
                     b.Property<int>("LotNumber")
                         .HasColumnType("int");
 
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("ParkingDateTime")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("LicensePlateID");
 

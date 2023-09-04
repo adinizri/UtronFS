@@ -4,35 +4,13 @@ namespace Server.Utils;
 
 public static class Consts
 {
-    // the tickts options
-    public static IDictionary<TicketTypes, Ticket> OptionalTicket = new Dictionary<
-        TicketTypes,
-        Ticket
-    >
-    {
-        { TicketTypes.VIP, vipTicket },
-        { TicketTypes.Value, valueTicket },
-        { TicketTypes.Regular, regularTicket }
-    };
-
-    // the vehicle Classes dictionary that holds for every class what vehicle can we use
-    public static IDictionary<VehicleClass, string[]> vehicleClasses = new Dictionary<
-        VehicleClass,
-        string[]
-    >
-    {
-        { VehicleClass.A, new string[] { "Motorcycle", "Private", "Crossover" } },
-        { VehicleClass.B, new string[] { "SUV", "Van" } },
-        { VehicleClass.C, new string[] { "Truck" } },
-    };
-
     private static readonly Ticket vipTicket =
         new(
             TicketTypes.VIP,
             1,
             10,
             new Dimensions(0, 0, 0),
-            new VehicleClass[] { VehicleClass.A, VehicleClass.B, VehicleClass.C },
+            new string[] { VehicleClass.A, VehicleClass.B, VehicleClass.C },
             200,
             0
         );
@@ -42,7 +20,7 @@ public static class Consts
             11,
             30,
             new Dimensions(2500, 2400, 5000),
-            new VehicleClass[] { VehicleClass.A, VehicleClass.B },
+            new string[] { VehicleClass.A, VehicleClass.B },
             100,
             72
         );
@@ -52,22 +30,45 @@ public static class Consts
             31,
             60,
             new Dimensions(2000, 2000, 3000),
-            new VehicleClass[] { VehicleClass.A },
+            new string[] { VehicleClass.A },
             50,
             24
         );
 
-    public enum VehicleClass
+    // the tickts options
+
+    public readonly static IDictionary<string, Ticket> OptionalTickets = new Dictionary<
+        string,
+        Ticket
+    >
     {
-        A,
-        B,
-        C
+        { TicketTypes.VIP, vipTicket },
+        { TicketTypes.Value, valueTicket },
+        { TicketTypes.Regular, regularTicket }
+    };
+
+    // the vehicle Classes dictionary that holds for every class what vehicle can we use
+    public readonly static IDictionary<string, string[]> vehicleClasses = new Dictionary<
+        string,
+        string[]
+    >
+    {
+        { VehicleClass.A, new string[] { "Motorcycle", "Private", "Crossover" } },
+        { VehicleClass.B, new string[] { "SUV", "Van" } },
+        { VehicleClass.C, new string[] { "Truck" } },
+    };
+
+    public static class VehicleClass
+    {
+        public const string A = "A";
+        public const string B = "B";
+        public const string C = "C";
     }
 
-    public enum TicketTypes
+    public static class TicketTypes
     {
-        VIP,
-        Value,
-        Regular
+        public const string Regular = "Regular";
+        public const string Value = "Value";
+        public const string VIP = "VIP";
     }
 }
