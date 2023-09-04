@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Server.Models;
+using Server.Utils;
+using SQLitePCL;
 
 namespace Server.Controllers;
 
@@ -7,9 +9,22 @@ namespace Server.Controllers;
 [Route("[controller]")]
 public class GarageController : ControllerBase
 {
+    private readonly UtronDbContext _context;
+
+    public GarageController(UtronDbContext context)
+    {
+        _context = context;
+    }
+
     [HttpPost("/checkIn/{LicensePlateID}")]
     public async Task<IActionResult> CheckInVehicle([FromBody] VehicleModel vehicle)
     {
-        return Ok("hi");
+        return Ok(Garage.GetFreeParkingLotByTicketType(Consts.TicketTypes.VIP, _context));
+    }
+
+    [HttpGet("/checkIn")]
+    public async Task<IActionResult> GetFreeParkingLots()
+    {
+        return Ok(Garage.GetFreeParkingLotByTicketType(Consts.TicketTypes.VIP, _context));
     }
 }

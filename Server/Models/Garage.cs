@@ -5,7 +5,7 @@ namespace Server.Models;
 
 class Garage
 {
-    //  public async Task<Boolean> CheckInVehicle(VehicleModel vehicle)
+    //  public async Task<Boolean> CheckInVehicle(VehicleModel vehicle,DataContext context)
     //         {
     //             //ValidateVehicleDimensions
 
@@ -17,7 +17,7 @@ class Garage
     //                 )
     //             )
     //             {
-    //                 await Task.Run()
+
     //                 //insert Vehicle to the parking spot
     //             }
     //             return
@@ -27,6 +27,16 @@ class Garage
 
     //         }
 
+
+
+    public static async Task<List<ParkingRecord>> GetFreeParkingLotByTicketType(
+        Consts.TicketTypes ticketType,
+        UtronDbContext context
+    )
+    {
+        List<ParkingRecord> obj = await context.ParkingRecords.ToListAsync();
+        return obj;
+    }
 
     public static List<Consts.TicketTypes> GetSuitableTicketByDimenetions(
         Dimensions vehicleDimensions,
