@@ -1,0 +1,29 @@
+.checkin_container{
+text-align: center;
+    display: inline-flex;
+    flex-direction: row-reverse;
+    justify-content: center;
+    gap: 4vw;
+    
+}
+.center_page{
+    margin: auto;
+    width: 70%;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+}
+.form_container{
+width: 20%;
+    /* display: inline-block; */
+}
+.form_fields{
+    margin-bottom: 2vh;
+}
+.checkIn_button{
+    width: 100%;
+}
+.cards_container{
+  
+        /* display: inline-block; */
+}
