@@ -19,12 +19,12 @@ public class GarageController : ControllerBase
     [HttpPost("/checkIn/{LicensePlateID}")]
     public async Task<IActionResult> CheckInVehicle([FromBody] VehicleModel vehicle)
     {
-        return Ok(Garage.GetFreeParkingLotByTicketType(Consts.TicketTypes.VIP, _context));
+        return Ok(await Garage.GetFreeParkingLotByTicketType(Consts.TicketTypes.VIP, _context));
     }
 
     [HttpGet("/checkIn")]
     public async Task<IActionResult> GetFreeParkingLots()
     {
-        return Ok(Garage.GetFreeParkingLotByTicketType(Consts.TicketTypes.VIP, _context));
+        return Ok(await Garage.GetFreeParkingLotByTicketType(Consts.TicketTypes.VIP, _context));
     }
 }
