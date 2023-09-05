@@ -1,13 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Input, Button, Alert, Card, Space } from "antd";
 import "./Checkin.css";
 import axios from "axios";
-import {
-  AxiosHeaders,
-  SERVER_ADRESS,
-  tickets,
-  vehiclesType,
-} from "../../consts";
+import { AxiosHeaders, SERVER_ADRESS, vehiclesType } from "../../consts";
 import Swal from "sweetalert2";
 import {
   getTicketFromDictByType,
@@ -22,6 +17,7 @@ const CheckIn = () => {
   const propertiesToDelete = ["VehicleHeight", "VehicleWidth", "VehicleLength"];
 
   const [formData, setFormData] = useState({
+    //the form data
     Name: "",
     LicensePlateID: "",
     Phone: "",
@@ -32,8 +28,10 @@ const CheckIn = () => {
     VehicleLength: "",
   });
   const [openModal, setOpenModal] = useState(false);
-  const [optionalTickets, setOptionalTickets] = useState();
-  const [errors, setErrors] = useState({});
+  const [optionalTickets, setOptionalTickets] = useState(); //store the given alternative ticket if needed
+  const [errors, setErrors] = useState({}); //form errors
+  const [vehicleClass, setVehicleClass] = useState({}); //store the vehicleClass from the server
+  const [tickets, setTickets] = useState({}); //store the tickets from the server
   const navigate = useNavigate();
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -42,12 +40,21 @@ const CheckIn = () => {
       [name]: value,
     });
   };
-  const handleTicketTypeTrade = (value) => {
-    setFormData({
-      ...formData,
-      TicketType: value,
-    });
-  };
+  useEffect(() => {
+    async function fetchData() {
+      const ticketsFromServer = await axios.get(
+        `${SERVER_ADRESS}/api/Garage/Tickets`,
+        { headers: AxiosHeaders }
+      );
+      const vehicleClassFromServer = await axios.get(
+        `${SERVER_ADRESS}/api/Garage/vehicleClasses`,
+        { headers: AxiosHeaders }
+      );
+      setTickets(ticketsFromServer.data);
+      setVehicleClass(vehicleClassFromServer.data);
+    }
+    fetchData();
+  }, []);
 
   const validation = () => {
     const newErrors = {};
@@ -61,6 +68,7 @@ const CheckIn = () => {
       newErrors.LicensePlateID = "License Plate ID is required";
     }
     if (formData.Phone === "") {
+      //without valid phone validation
       newErrors.Phone = "Phone is required";
     }
     if (!(formData.TicketType in tickets)) {
@@ -102,7 +110,10 @@ const CheckIn = () => {
   const createValidVehicle = () => {
     const vehicle = {
       ...formData,
-      VehicleClass: getVehicleClassByVehicle(formData.VehicleType),
+      VehicleClass: getVehicleClassByVehicle(
+        vehicleClass,
+        formData.VehicleType
+      ),
       Dimensions: {
         Height: Number(formData.VehicleHeight),
         Width: Number(formData.VehicleWidth),
@@ -186,22 +197,22 @@ const CheckIn = () => {
         insertVehicle();
       } else {
         const tickets = await getSuitableTickets();
-        setOptionalTickets(tickets);
-        setOpenModal(true);
+        if (tickets) {
+          setOptionalTickets(tickets);
+          setOpenModal(true);
+        } else {
+          Swal.fire({
+            title: "Out of parking spots",
+
+            icon: "error",
+          });
+        }
       }
     }
   };
 
   return (
     <div className='center_page'>
-      {openModal && (
-        <TradeModal
-          tickets={optionalTickets}
-          openModal={openModal}
-          handleTrade={handleTrade}
-          paidTicketPrice={getTicketFromDictByType(formData.TicketType).Price}
-          closeModal={() => setOpenModal(false)}></TradeModal>
-      )}
       <h1>Check in vehicle</h1>
       <div className='checkin_container'>
         <span className='form_container'>
@@ -233,13 +244,23 @@ const CheckIn = () => {
                   <p
                     key={
                       ticket.type
-                    }>{`Ticket type: ${ticket.type} cost: ${ticket.Price}$`}</p>
+                    }>{`Ticket type: ${ticket.type} cost: ${ticket.price}$`}</p>
                 );
               })}
             </Card>
           </Space>
         </span>
       </div>
+      {openModal && optionalTickets && (
+        <TradeModal
+          tickets={optionalTickets}
+          openModal={openModal}
+          handleTrade={handleTrade}
+          paidTicketPrice={
+            getTicketFromDictByType(tickets, formData.TicketType).price
+          }
+          closeModal={() => setOpenModal(false)}></TradeModal>
+      )}
     </div>
   );
 };

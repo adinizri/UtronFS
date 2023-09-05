@@ -26,7 +26,7 @@ public static class Consts
         );
     private static readonly Ticket regularTicket =
         new(
-            TicketTypes.VIP,
+            TicketTypes.Regular,
             31,
             60,
             new Dimensions(2000, 2000, 3000),

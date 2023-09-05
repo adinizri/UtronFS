@@ -9,7 +9,7 @@ public class Ticket
     public int EndLot { get; set; }
     public Dimensions Dimensions { get; set; }
     public string[] VehicleClasses { get; set; }
-    public int Cost { get; set; }
+    public int Price { get; set; }
     public int TimeLimits { get; set; }
 
     public Ticket(
@@ -18,7 +18,7 @@ public class Ticket
         int endLot,
         Dimensions dimensions,
         string[] vehicleClasses,
-        int cost,
+        int price,
         int timeLimits
     )
     {
@@ -27,7 +27,7 @@ public class Ticket
         EndLot = endLot;
         Dimensions = dimensions;
         VehicleClasses = vehicleClasses;
-        Cost = cost;
+        Price = price;
         TimeLimits = timeLimits;
     }
 }

@@ -55,13 +55,43 @@ public class GarageController : ControllerBase
         }
     }
 
-    [HttpGet("getSuitableTicket")] // add dimenstions
-    public async Task<IActionResult> GetVeicleTicketsOptions()
+    [HttpGet("getSuitableTickets")]
+    public async Task<IActionResult> GetVehicleTicketsOptions(
+        [FromQuery] int height,
+        [FromQuery] int width,
+        [FromQuery] int length
+    )
     {
-        Dimensions d = new(10000, 1000, 1000);
+        Dimensions d = new(height, width, length);
         try
         {
             return Ok(await _garage.GetSuitableTicketByDimenetions(d));
+        }
+        catch (Exception ex)
+        {
+            throw;
+        }
+    }
+
+    [HttpGet("checkFit")]
+    public async Task<IActionResult> GetVehicleTicketsOptions(
+        [FromQuery] int height,
+        [FromQuery] int width,
+        [FromQuery] int length,
+        [FromQuery] string TicketType
+    )
+    {
+        bool canFit = false;
+        Dimensions d = new(height, width, length);
+        try
+        {
+            List<Ticket> tickets = await _garage.GetSuitableTicketByDimenetions(d);
+            tickets.ForEach(ticket =>
+            {
+                if (ticket.Type == TicketType)
+                    canFit = true;
+            });
+            return Ok(canFit);
         }
         catch (Exception ex)
         {
@@ -93,5 +123,17 @@ public class GarageController : ControllerBase
         {
             throw;
         }
+    }
+
+    [HttpGet("vehicleClasses")]
+    public IActionResult GetVehicelClasses()
+    {
+        return Ok(Consts.vehicleClasses);
+    }
+
+    [HttpGet("Tickets")]
+    public IActionResult GetTickets()
+    {
+        return Ok(Consts.OptionalTickets);
     }
 }
