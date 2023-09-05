@@ -14,6 +14,7 @@ const HomePage = () => {
         <Button onClick={() => navigate("/GarageDisplay")}>
           Garage Display{" "}
         </Button>
+        <Button onClick={() => navigate("/insertFive")}>insert Five </Button>
       </div>
     </div>
   );

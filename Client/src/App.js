@@ -10,6 +10,7 @@ import {
 import Checkout from "./pages/CheckOut/Checkout";
 import CheckIn from "./pages/CheckIn/CheckIn";
 import GarageDisplay from "./pages/GarageDisplay/GarageDisplay";
+import InsertFive from "./pages/InsertFive/insertFive";
 
 const router = createBrowserRouter([
   {
@@ -27,6 +28,10 @@ const router = createBrowserRouter([
   {
     path: "/GarageDisplay",
     element: <GarageDisplay />,
+  },
+  {
+    path: "/InsertFive",
+    element: <InsertFive />,
   },
 ]);
 function App() {
