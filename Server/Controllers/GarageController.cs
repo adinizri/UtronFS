@@ -125,6 +125,7 @@ public class GarageController : ControllerBase
         }
     }
 
+    [HttpPost("insertFive")]
     [HttpGet("vehicleClasses")]
     public IActionResult GetVehicelClasses()
     {

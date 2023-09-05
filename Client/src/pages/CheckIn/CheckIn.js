@@ -106,7 +106,7 @@ const CheckIn = () => {
       }
     });
   };
-
+  //create vehicle obj for insert vehicle request
   const createValidVehicle = () => {
     const vehicle = {
       ...formData,
@@ -152,6 +152,7 @@ const CheckIn = () => {
       });
     }
   };
+
   //chack if dimensions fit in parking lot and if there is optional parking spot by ticket
   const canPark = async () => {
     try {
@@ -190,7 +191,7 @@ const CheckIn = () => {
       console.log(error);
     }
   };
-
+  //handle submit
   const submitForm = async () => {
     if (validation()) {
       if (await canPark()) {
