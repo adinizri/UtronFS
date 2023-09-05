@@ -1,22 +1,22 @@
 import React, { useState } from "react";
 import { Input, Button, Alert, Card, Space } from "antd";
 import "./Checkin.css";
+import axios from "axios";
+import {
+  AxiosHeaders,
+  SERVER_ADRESS,
+  tickets,
+  vehiclesType,
+} from "../../consts";
+import Swal from "sweetalert2";
+import { getVehicleClassByVehicle } from "../../Utils.js/utils";
+import InputWithError from "../../SharedComponent/InputWithError/InputWithError";
+import TradeModal from "./TradeModal/TradeModal";
 const CheckIn = () => {
   // Name, License plate ID, Phone, Ticket type, Vehicle type, Vehicle height, Vehicle width, Vehicle length.
-  const tickets = {
-    VIP: { type: "VIP", Price: 200 },
-    Value: { type: "Value", Price: 100 },
-    Regular: { type: "Regular", Price: 50 },
-  };
 
-  const vehiclesType = [
-    "Motorcycle",
-    "Private",
-    "Crossover",
-    "SUV",
-    "Van",
-    "ruck",
-  ];
+  const propertiesToDelete = ["VehicleHeight", "VehicleWidth", "VehicleLength"];
+
   const [formData, setFormData] = useState({
     Name: "",
     LicensePlateID: "",
@@ -27,6 +27,8 @@ const CheckIn = () => {
     VehicleWidth: "",
     VehicleLength: "",
   });
+  const [openModal, setOpenModal] = useState(false);
+  const [optionalTickets, setOptionalTickets] = useState();
   const [errors, setErrors] = useState({});
 
   const handleInputChange = (event) => {
@@ -34,6 +36,12 @@ const CheckIn = () => {
     setFormData({
       ...formData,
       [name]: value,
+    });
+  };
+  const handleTicketTypeTrade = (value) => {
+    setFormData({
+      ...formData,
+      TicketType: value,
     });
   };
 
@@ -72,36 +80,121 @@ const CheckIn = () => {
       newErrors.VehicleWidth = "enter Vehicle Width ";
     }
     setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
-  const submitForm = () => {
-    validation();
+  //delete properties from obj
+  const deleteObjProperties = (propertiesToDelete, obj) => {
+    propertiesToDelete.forEach((propertyName) => {
+      if (obj.hasOwnProperty(propertyName)) {
+        delete obj[propertyName];
+      }
+    });
   };
+
+  const createValidVehicle = () => {
+    const vehicle = {
+      ...formData,
+      VehicleClass: getVehicleClassByVehicle(formData.VehicleType),
+      Dimensions: {
+        Height: Number(formData.VehicleHeight),
+        Width: Number(formData.VehicleWidth),
+        Length: Number(formData.VehicleLength),
+      },
+    };
+    deleteObjProperties(propertiesToDelete, vehicle);
+    return vehicle;
+  };
+
+  const insertVehicle = async () => {
+    try {
+      const vehicle = createValidVehicle();
+      const response = await axios.post(
+        `${SERVER_ADRESS}/api/Garage/checkIn`,
+        vehicle,
+        { headers: AxiosHeaders }
+        // vehicle
+      );
+      if (response.status === 200) {
+        Swal.fire({
+          title: "success",
+          text: "The vehicle add to the garage",
+          icon: "success",
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      Swal.fire({
+        title: "Error!",
+
+        icon: "error",
+      });
+    }
+  };
+  //chack if dimensions fit in parking lot and if there is optional parking spot by ticket
+  const canPark = async () => {
+    try {
+      const obj = {
+        height: Number(formData.VehicleHeight),
+        width: Number(formData.VehicleWidth),
+        length: Number(formData.VehicleLength),
+        TicketType: formData.TicketType,
+      };
+      const response = await axios.get(
+        `${SERVER_ADRESS}/api/Garage/checkFit`,
+        { params: obj },
+        { headers: AxiosHeaders }
+      );
+      return response.data;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  //get the suitable tickets for the vehicle
+  const getSuitableTickets = async () => {
+    try {
+      const obj = {
+        height: Number(formData.VehicleHeight),
+        width: Number(formData.VehicleWidth),
+        length: Number(formData.VehicleLength),
+      };
+      const response = await axios.get(
+        `${SERVER_ADRESS}/api/Garage/getSuitableTickets`,
+        { params: obj },
+        { headers: AxiosHeaders }
+      );
+      return response.data;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const submitForm = async () => {
+    if (validation()) {
+      if (await canPark()) {
+        insertVehicle();
+      } else {
+        debugger;
+        const tickets = await getSuitableTickets();
+        setOptionalTickets(tickets);
+        setOpenModal(true);
+      }
+    }
+  };
+
   return (
     <div className='center_page'>
       <h1>Check in vehicle</h1>
       <div className='checkin_container'>
         <span className='form_container'>
           {Object.keys(formData).map((fieldName) => (
-            <>
-              <Input
-                className={errors[fieldName] ? "" : "form_fields"}
-                key={fieldName}
-                type='text'
-                name={fieldName}
-                value={formData[fieldName]}
-                onChange={handleInputChange}
-                placeholder={fieldName}
-                status={errors[fieldName] ? "error" : undefined}
-              />
-              {errors[fieldName] && (
-                <Alert
-                  className='form_fields'
-                  message={errors[fieldName]}
-                  type='error'
-                  showIcon
-                />
-              )}
-            </>
+            <InputWithError
+              key={fieldName}
+              fieldName={fieldName}
+              error={errors[fieldName]}
+              value={formData[fieldName]}
+              handleInputChange={handleInputChange}
+            />
           ))}
 
           <Button
@@ -119,13 +212,23 @@ const CheckIn = () => {
               style={{ width: 300 }}>
               {Object.values(tickets).map((ticket) => {
                 return (
-                  <p>{`Ticket type: ${ticket.type} cost: ${ticket.Price}$`}</p>
+                  <p
+                    key={
+                      ticket.type
+                    }>{`Ticket type: ${ticket.type} cost: ${ticket.Price}$`}</p>
                 );
               })}
             </Card>
           </Space>
         </span>
       </div>
+      {openModal && (
+        <TradeModal
+          tickets={optionalTickets}
+          openModal={openModal}
+          insertVehicle={insertVehicle}
+          handleTicketTypeTrade={handleTicketTypeTrade}></TradeModal>
+      )}
     </div>
   );
 };
