@@ -16,23 +16,12 @@ const customStyles = {
 Modal.setAppElement(document.getElementById("root"));
 
 export default function TradeModal(props) {
-  let subtitle;
-  const [modalIsOpen, setIsOpen] = React.useState(props.openModal);
-
-  function openModal() {
-    setIsOpen(true);
-  }
-
-  function closeModal() {
-    setIsOpen(false);
-  }
-
   return (
     <div>
       {/* <button onClick={openModal}>Open Modal</button> */}
       <Modal
-        isOpen={modalIsOpen}
-        onRequestClose={closeModal}
+        isOpen={props.openModal}
+        onRequestClose={props.closeModal}
         style={customStyles}
         contentLabel='Trade Modal'>
         <h2>Trade ticket</h2>
@@ -42,19 +31,15 @@ export default function TradeModal(props) {
         </div>
         <div>
           {props.tickets.map((ticket) => {
-            // let text = `${ticket.type} ticket for ${
-            //   ticket.Price - props.paidTicketPrice
-            // }$`;
-
             return (
               <Button
                 key={ticket.type}
-                // onClick={() => {
-                //   props.handleTicketTypeTrade();
-                //   props.insertVehicle();
-                // }}
-              >
-                {ticket.type}
+                onClick={() => {
+                  props.handleTrade(ticket.type);
+                }}>
+                {`${ticket.type} ticket for ${
+                  ticket.price - props.paidTicketPrice
+                }$`}
               </Button>
             );
           })}

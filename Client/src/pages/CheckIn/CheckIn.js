@@ -9,9 +9,13 @@ import {
   vehiclesType,
 } from "../../consts";
 import Swal from "sweetalert2";
-import { getVehicleClassByVehicle } from "../../Utils.js/utils";
+import {
+  getTicketFromDictByType,
+  getVehicleClassByVehicle,
+} from "../../Utils.js/utils";
 import InputWithError from "../../SharedComponent/InputWithError/InputWithError";
 import TradeModal from "./TradeModal/TradeModal";
+import { useNavigate } from "react-router-dom";
 const CheckIn = () => {
   // Name, License plate ID, Phone, Ticket type, Vehicle type, Vehicle height, Vehicle width, Vehicle length.
 
@@ -30,7 +34,7 @@ const CheckIn = () => {
   const [openModal, setOpenModal] = useState(false);
   const [optionalTickets, setOptionalTickets] = useState();
   const [errors, setErrors] = useState({});
-
+  const navigate = useNavigate();
   const handleInputChange = (event) => {
     const { name, value } = event.target;
     setFormData({
@@ -82,6 +86,10 @@ const CheckIn = () => {
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
+  const handleTrade = (value) => {
+    insertVehicle(value);
+  };
+
   //delete properties from obj
   const deleteObjProperties = (propertiesToDelete, obj) => {
     propertiesToDelete.forEach((propertyName) => {
@@ -105,9 +113,11 @@ const CheckIn = () => {
     return vehicle;
   };
 
-  const insertVehicle = async () => {
+  const insertVehicle = async (ticketType) => {
     try {
+      debugger;
       const vehicle = createValidVehicle();
+      if (ticketType) vehicle.TicketType = ticketType;
       const response = await axios.post(
         `${SERVER_ADRESS}/api/Garage/checkIn`,
         vehicle,
@@ -115,11 +125,12 @@ const CheckIn = () => {
         // vehicle
       );
       if (response.status === 200) {
-        Swal.fire({
+        await Swal.fire({
           title: "success",
           text: "The vehicle add to the garage",
           icon: "success",
         });
+        navigate("/");
       }
     } catch (error) {
       console.log(error);
@@ -174,7 +185,6 @@ const CheckIn = () => {
       if (await canPark()) {
         insertVehicle();
       } else {
-        debugger;
         const tickets = await getSuitableTickets();
         setOptionalTickets(tickets);
         setOpenModal(true);
@@ -184,6 +194,14 @@ const CheckIn = () => {
 
   return (
     <div className='center_page'>
+      {openModal && (
+        <TradeModal
+          tickets={optionalTickets}
+          openModal={openModal}
+          handleTrade={handleTrade}
+          paidTicketPrice={getTicketFromDictByType(formData.TicketType).Price}
+          closeModal={() => setOpenModal(false)}></TradeModal>
+      )}
       <h1>Check in vehicle</h1>
       <div className='checkin_container'>
         <span className='form_container'>
@@ -222,13 +240,6 @@ const CheckIn = () => {
           </Space>
         </span>
       </div>
-      {openModal && (
-        <TradeModal
-          tickets={optionalTickets}
-          openModal={openModal}
-          insertVehicle={insertVehicle}
-          handleTicketTypeTrade={handleTicketTypeTrade}></TradeModal>
-      )}
     </div>
   );
 };

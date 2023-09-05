@@ -1,4 +1,4 @@
-import { vehicleClass } from "../consts";
+import { tickets, vehicleClass } from "../consts";
 
 export function getVehicleClassByVehicle(vehicle) {
   let className = "";
@@ -7,3 +7,10 @@ export function getVehicleClassByVehicle(vehicle) {
   });
   return className;
 }
+
+export const getTicketFromDictByType = (ticketType) => {
+  let ticket = Object.entries(tickets).filter(
+    (value) => value[1].type == ticketType
+  );
+  return ticket[0][1];
+};
