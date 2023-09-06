@@ -5,10 +5,12 @@ namespace Server.Models;
 class GarageModel
 {
     private readonly UtronDbContext _context;
+    private readonly Ticket _ticket;
 
     public GarageModel(UtronDbContext context)
     {
         _context = context;
+        _ticket = new Ticket(context);
     }
 
     //checkin in a vehicle
@@ -17,17 +19,20 @@ class GarageModel
         try
         {
             // check if there free lots
-            List<int> ticketTypeFreeLots = await GetFreeParkingLotByTicketType(vehicle.TicketType);
+            List<int> ticketTypeFreeLots = await _ticket.GetFreeParkingLotByTicketType(
+                vehicle.TicketType
+            );
             if (ticketTypeFreeLots.Count() > 0)
             {
-                ParkingRecord parkingRecord = new ParkingRecord
-                {
-                    LicensePlateID = vehicle.LicensePlateID,
-                    ParkingDateTime = DateTime.Now,
-                    LotNumber = ticketTypeFreeLots[0],
-                    PhoneNumber = vehicle.Phone,
-                    Name = vehicle.Name
-                };
+                ParkingRecord parkingRecord =
+                    new()
+                    {
+                        LicensePlateID = vehicle.LicensePlateID,
+                        ParkingDateTime = DateTime.Now,
+                        LotNumber = ticketTypeFreeLots[0],
+                        PhoneNumber = vehicle.Phone,
+                        Name = vehicle.Name
+                    };
 
                 await _context.ParkingRecords.AddAsync(parkingRecord);
                 await _context.SaveChangesAsync();
@@ -42,99 +47,22 @@ class GarageModel
         }
     }
 
+    //removeVehicle from Garage
     public async Task<ParkingRecord> CheckoutVehicle(string licensePlateID)
     {
-        ParkingRecord parkingRecord = await _context.ParkingRecords.FindAsync(licensePlateID);
-
-        if (parkingRecord == null)
-        {
-            return parkingRecord;
-        }
-
-        _context.ParkingRecords.Remove(parkingRecord);
-
         try
         {
-            await _context.SaveChangesAsync();
-            return parkingRecord;
-        }
-        catch (Exception ex)
-        {
-            throw;
-        }
-    }
+            ParkingRecord parkingRecord = await _context.ParkingRecords.FindAsync(licensePlateID);
 
-    // get the free parkin lots by ticketType
-    public async Task<List<int>> GetFreeParkingLotByTicketType(string ticketType)
-    {
-        try
-        {
-            Ticket ticket = Consts.OptionalTickets[ticketType];
-            List<int> takenLots = await _context.ParkingRecords
-                .Where(
-                    record =>
-                        record.LotNumber >= ticket.StartLot && record.LotNumber <= ticket.EndLot
-                )
-                .Select(pr => pr.LotNumber)
-                .ToListAsync();
-
-            List<int> freeLost = Enumerable
-                .Range(ticket.StartLot, ticket.EndLot - ticket.StartLot + 1)
-                .Except(takenLots)
-                .ToList();
-            return freeLost;
-        }
-        catch (Exception ex)
-        {
-            throw;
-        }
-    }
-
-    public async Task<List<Ticket>> GetSuitableTicketByDimenetions(Dimensions vehicleDimensions)
-    {
-        try
-        {
-            List<Ticket> suitableTickets = new();
-            foreach (KeyValuePair<string, Ticket> ticketPair in Consts.OptionalTickets)
+            if (parkingRecord == null)
             {
-                Ticket ticket = ticketPair.Value;
-                string ticketType = ticketPair.Key;
-                if (
-                    Dimensions.ValidateVehicleDimensions(
-                        vehicleDimensions,
-                        ticket.Dimensions,
-                        ticketType
-                    )
-                )
-                {
-                    List<int> freeLots = await GetFreeParkingLotByTicketType(ticketType);
-                    if (freeLots.Count() > 0)
-                        suitableTickets.Add(ticket);
-                }
+                return parkingRecord;
             }
 
-            return suitableTickets;
-        }
-        catch (Exception e)
-        {
-            throw e;
-        }
-    }
+            _context.ParkingRecords.Remove(parkingRecord);
 
-    public async Task<List<string>> GetParkingCarsByTicket(string ticketType)
-    {
-        try
-        {
-            Ticket ticket = Consts.OptionalTickets[ticketType];
-            List<string> parkingCars = await _context.ParkingRecords
-                .Where(
-                    record =>
-                        record.LotNumber >= ticket.StartLot && record.LotNumber <= ticket.EndLot
-                )
-                .Select(pr => pr.LicensePlateID)
-                .ToListAsync();
-
-            return parkingCars;
+            await _context.SaveChangesAsync();
+            return parkingRecord;
         }
         catch (Exception ex)
         {

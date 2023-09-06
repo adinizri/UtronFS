@@ -55,33 +55,6 @@ public class GarageController : ControllerBase
         }
     }
 
-    [HttpGet("getSuitableTicket")] // add dimenstions
-    public async Task<IActionResult> GetVeicleTicketsOptions()
-    {
-        Dimensions d = new(10000, 1000, 1000);
-        try
-        {
-            return Ok(await _garage.GetSuitableTicketByDimenetions(d));
-        }
-        catch (Exception ex)
-        {
-            throw;
-        }
-    }
-
-    [HttpGet("ticketParkingCars/{ticketType}")]
-    public async Task<IActionResult> GetParkingCarsByTicket(string ticketType)
-    {
-        try
-        {
-            return Ok(await _garage.GetParkingCarsByTicket(ticketType));
-        }
-        catch (Exception ex)
-        {
-            throw;
-        }
-    }
-
     [HttpGet("garageStatus")]
     public async Task<IActionResult> GetGarageStatus()
     {
@@ -93,5 +66,11 @@ public class GarageController : ControllerBase
         {
             throw;
         }
+    }
+
+    [HttpGet("vehicleClasses")]
+    public IActionResult GetVehicelClasses()
+    {
+        return Ok(Consts.vehicleClasses);
     }
 }

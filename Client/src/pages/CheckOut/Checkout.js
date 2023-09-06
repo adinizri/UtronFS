@@ -7,12 +7,12 @@ import Swal from "sweetalert2";
 const Checkout = () => {
   const [licensePlateID, setLicensePlateID] = useState("");
   const handleCheckout = async () => {
-    if (licensePlateID != "") {
+    if (licensePlateID !== "") {
       try {
         const response = await axios.delete(
           `${SERVER_ADRESS}/api/Garage/checkout/${licensePlateID}`
         );
-        if (response.status == 200) {
+        if (response.status === 200) {
           Swal.fire({
             title: "success",
             text: "The vehicle is checked out",
