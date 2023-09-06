@@ -4,7 +4,8 @@ import axios from "axios";
 
 const InsertFive = () => {
   const [data, setData] = useState();
-  const rand = Math.random() * 9999999999999;
+
+  const rand = Math.round(Math.random() * 99999999);
   const vehicles = [
     {
       VehicleClass: "A",
@@ -84,8 +85,11 @@ const InsertFive = () => {
             // vehicle
           )
         );
-        const resualts = await Promise.all(axiosRequests);
+        const resualts = (await Promise.all(axiosRequests)).map(
+          (result) => result.data
+        );
         setData(resualts);
+        console.log(resualts);
       } catch (e) {
         console.log(e);
       }
@@ -93,6 +97,14 @@ const InsertFive = () => {
     insertFive();
   }, []);
 
-  return <div>{data && JSON.stringify(data)}</div>;
+  return (
+    <div>
+      {!data
+        ? "Loading ..."
+        : data.map((vehicle) => (
+            <div key={vehicle.licensePlateID}>{JSON.stringify(vehicle)}</div>
+          ))}
+    </div>
+  );
 };
 export default InsertFive;

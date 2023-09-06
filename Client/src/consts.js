@@ -14,14 +14,14 @@ export const AxiosHeaders = {
   "Content-Type": "application/json",
 };
 
-export const vehicleClass = (
-  await axios.get(`${SERVER_ADRESS}/api/Garage/vehicleClasses`, {
-    headers: AxiosHeaders,
-  })
-).data;
+// export const vehicleClass = (
+//   await axios.get(`${SERVER_ADRESS}/api/Garage/vehicleClasses`, {
+//     headers: AxiosHeaders,
+//   })
+// ).data;
 
-export const tickets = (
-  await axios.get(`${SERVER_ADRESS}/api/Garage/Tickets`, {
-    headers: AxiosHeaders,
-  })
-).data;
+// export const tickets = (
+//   await axios.get(`${SERVER_ADRESS}/api/Garage/Tickets`, {
+//     headers: AxiosHeaders,
+//   })
+// ).data;

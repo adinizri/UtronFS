@@ -43,7 +43,7 @@ const CheckIn = () => {
   useEffect(() => {
     async function fetchData() {
       const ticketsFromServer = await axios.get(
-        `${SERVER_ADRESS}/api/Garage/Tickets`,
+        `${SERVER_ADRESS}/api/Ticket/Tickets`,
         { headers: AxiosHeaders }
       );
       const vehicleClassFromServer = await axios.get(
@@ -163,7 +163,7 @@ const CheckIn = () => {
         TicketType: formData.TicketType,
       };
       const response = await axios.get(
-        `${SERVER_ADRESS}/api/Garage/checkFit`,
+        `${SERVER_ADRESS}/api/Ticket/checkFit`,
         { params: obj },
         { headers: AxiosHeaders }
       );
@@ -182,7 +182,7 @@ const CheckIn = () => {
         length: Number(formData.VehicleLength),
       };
       const response = await axios.get(
-        `${SERVER_ADRESS}/api/Garage/getSuitableTickets`,
+        `${SERVER_ADRESS}/api/Ticket/getSuitableTickets`,
         { params: obj },
         { headers: AxiosHeaders }
       );
@@ -203,7 +203,7 @@ const CheckIn = () => {
           setOpenModal(true);
         } else {
           Swal.fire({
-            title: "Out of parking spots",
+            title: "Sorry you can't park rignt now",
 
             icon: "error",
           });
