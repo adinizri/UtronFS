@@ -75,4 +75,10 @@ public class TicketController : ControllerBase
             throw;
         }
     }
+
+    [HttpGet("Tickets")]
+    public IActionResult GetTickets()
+    {
+        return Ok(Consts.OptionalTickets);
+    }
 }

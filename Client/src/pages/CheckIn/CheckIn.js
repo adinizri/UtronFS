@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Input, Button, Alert, Card, Space } from "antd";
 import "./Checkin.css";
 import axios from "axios";
-import { AxiosHeaders, SERVER_ADRESS, vehiclesType } from "../../consts";
+import { AxiosHeaders, SERVER_ADRESS } from "../../consts";
 import Swal from "sweetalert2";
 import {
   getTicketFromDictByType,
@@ -30,8 +30,9 @@ const CheckIn = () => {
   const [openModal, setOpenModal] = useState(false);
   const [optionalTickets, setOptionalTickets] = useState(); //store the given alternative ticket if needed
   const [errors, setErrors] = useState({}); //form errors
-  const [vehicleClass, setVehicleClass] = useState({}); //store the vehicleClass from the server
-  const [tickets, setTickets] = useState({}); //store the tickets from the server
+  const [vehicleClass, setVehicleClass] = useState(); //store the vehicleClass from the server
+  const [tickets, setTickets] = useState(); //store the tickets from the server
+  const [vehicles, setVehicles] = useState(); //the vehicles list from the server
   const navigate = useNavigate();
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -52,10 +53,25 @@ const CheckIn = () => {
       );
       setTickets(ticketsFromServer.data);
       setVehicleClass(vehicleClassFromServer.data);
+      setVehicles(
+        getVehiclesListFromVehicleClassDic(vehicleClassFromServer.data)
+      );
     }
     fetchData();
   }, []);
 
+  const getVehiclesListFromVehicleClassDic = (vehicleClassDic) => {
+    let vehiclesList = [];
+    for (const key in vehicleClassDic) {
+      if (vehicleClassDic.hasOwnProperty(key)) {
+        const classVehicles = vehicleClassDic[key];
+
+        // Concatenate the strings in the array and push it to the result array
+        vehiclesList = [].concat(vehiclesList, classVehicles);
+      }
+    }
+    return vehiclesList;
+  };
   const validation = () => {
     const newErrors = {};
 
@@ -77,8 +93,8 @@ const CheckIn = () => {
       ).join(" | ")}`;
     }
 
-    if (!vehiclesType.includes(formData.VehicleType)) {
-      newErrors.VehicleType = `vehicle type has to be equeal to: ${vehiclesType.join(
+    if (!vehicles.includes(formData.VehicleType)) {
+      newErrors.VehicleType = `vehicle type has to be equeal to: ${vehicles.join(
         " | "
       )}`;
     }
@@ -94,6 +110,7 @@ const CheckIn = () => {
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
+  //if ticket trade insert vehicle
   const handleTrade = (value) => {
     insertVehicle(value);
   };
@@ -123,7 +140,7 @@ const CheckIn = () => {
     deleteObjProperties(propertiesToDelete, vehicle);
     return vehicle;
   };
-
+  // insert vehicle to the garage
   const insertVehicle = async (ticketType) => {
     try {
       debugger;
@@ -212,7 +229,9 @@ const CheckIn = () => {
     }
   };
 
-  return (
+  return vehicleClass && //wont render till the data is comming
+    vehicleClass &&
+    vehicles ? (
     <div className='center_page'>
       <h1>Check in vehicle</h1>
       <div className='checkin_container'>
@@ -263,6 +282,8 @@ const CheckIn = () => {
           closeModal={() => setOpenModal(false)}></TradeModal>
       )}
     </div>
+  ) : (
+    <div>Loading...</div>
   );
 };
 

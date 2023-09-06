@@ -55,9 +55,6 @@ public class GarageController : ControllerBase
         }
     }
 
-   
-
- 
     [HttpGet("garageStatus")]
     public async Task<IActionResult> GetGarageStatus()
     {
@@ -71,16 +68,9 @@ public class GarageController : ControllerBase
         }
     }
 
-    [HttpPost("insertFive")]
     [HttpGet("vehicleClasses")]
     public IActionResult GetVehicelClasses()
     {
         return Ok(Consts.vehicleClasses);
-    }
-
-    [HttpGet("Tickets")]
-    public IActionResult GetTickets()
-    {
-        return Ok(Consts.OptionalTickets);
     }
 }
