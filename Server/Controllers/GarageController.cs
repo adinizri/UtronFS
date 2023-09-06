@@ -104,7 +104,8 @@ public class GarageController : ControllerBase
     {
         try
         {
-            return Ok(await _garage.GetParkingCarsByTicket(ticketType));
+            
+           return Ok(await _garage.GetParkingCarsByTicket(ticketType));
         }
         catch (Exception ex)
         {

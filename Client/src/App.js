@@ -12,6 +12,8 @@ import CheckIn from "./pages/CheckIn/CheckIn";
 import GarageDisplay from "./pages/GarageDisplay/GarageDisplay";
 import InsertFive from "./pages/InsertFive/insertFive";
 
+import TicketVehicles from "./pages/TicketVehicles/TicketVehicles";
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -32,6 +34,10 @@ const router = createBrowserRouter([
   {
     path: "/InsertFive",
     element: <InsertFive />,
+  },
+  {
+    path: "/TicketVehicles",
+    element: <TicketVehicles />,
   },
 ]);
 function App() {
