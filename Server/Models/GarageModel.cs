@@ -47,6 +47,7 @@ class GarageModel
         }
     }
 
+    //removeVehicle from Garage
     public async Task<ParkingRecord> CheckoutVehicle(string licensePlateID)
     {
         try
