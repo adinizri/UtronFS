@@ -11,12 +11,12 @@ namespace Server.Controllers;
 public class TicketController : ControllerBase
 {
     private readonly UtronDbContext _context;
-    private readonly GarageModel _garage;
+    private readonly Ticket _ticket;
 
     public TicketController(UtronDbContext context)
     {
         _context = context;
-        _garage = new(_context);
+        _ticket = new(_context);
     }
 
   
@@ -31,7 +31,7 @@ public class TicketController : ControllerBase
         Dimensions d = new(height, width, length);
         try
         {
-            return Ok(await _garage.GetSuitableTicketByDimenetions(d));
+            return Ok(await _ticket.GetSuitableTicketByDimenetions(d));
         }
         catch (Exception ex)
         {
@@ -51,7 +51,7 @@ public class TicketController : ControllerBase
         Dimensions d = new(height, width, length);
         try
         {
-            List<Ticket> tickets = await _garage.GetSuitableTicketByDimenetions(d);
+            List<Ticket> tickets = await _ticket.GetSuitableTicketByDimenetions(d);
             tickets.ForEach(ticket =>
             {
                 if (ticket.Type == TicketType)
@@ -71,7 +71,7 @@ public class TicketController : ControllerBase
         try
         {
             
-           return Ok(await _garage.GetParkingCarsByTicket(ticketType));
+           return Ok(await _ticket.GetParkingCarsByTicket(ticketType));
         }
         catch (Exception ex)
         {
