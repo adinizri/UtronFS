@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { AxiosHeaders, SERVER_ADRESS } from "../../consts";
 import axios from "axios";
+import CardGrid from "../../SharedComponent/CardGrid/CardGrid";
+import "./InsertFive.css";
 
 const InsertFive = () => {
   const [data, setData] = useState();
@@ -98,12 +100,11 @@ const InsertFive = () => {
   }, []);
 
   return (
-    <div>
-      {!data
-        ? "Loading ..."
-        : data.map((vehicle) => (
-            <div key={vehicle.licensePlateID}>{JSON.stringify(vehicle)}</div>
-          ))}
+    <div className='page-container'>
+      <h1>New Vehicles in the Garage!</h1>
+      <div className='cards-container'>
+        {!data ? "Loading ..." : <CardGrid data={data} />}
+      </div>
     </div>
   );
 };

@@ -3,6 +3,7 @@ import { Card, Spin, Row, Col } from "antd";
 import { SERVER_ADRESS } from "../../consts";
 import axios from "axios";
 import "./GarageDisplay.css"; // Import your CSS file
+import CardGrid from "../../SharedComponent/CardGrid/CardGrid";
 
 const GarageDisplay = () => {
   const [data, setData] = useState(null);
@@ -31,27 +32,11 @@ const GarageDisplay = () => {
         ) : error ? (
           <p>Error: {error.message}</p>
         ) : data ? (
-          <Row gutter={16}>
-            {data.map((item, index) =>
-              data.length > 0 ? (
-                <Col
-                  span={4}
-                  key={index}>
-                  <Card
-                    title={`vehicle ID: ${item.licensePlateID}`}
-                    className='vehicle-card'>
-                    {Object.keys(item).map((key) => (
-                      <div key={key}>
-                        <strong>{key}:</strong> {item[key]}
-                      </div>
-                    ))}
-                  </Card>
-                </Col>
-              ) : (
-                <div>The Garage is Empthy</div>
-              )
-            )}
-          </Row>
+          data.length > 0 ? (
+            <CardGrid data={data}></CardGrid>
+          ) : (
+            <div>The Garage is Empthy</div>
+          )
         ) : null}
       </div>
     </div>

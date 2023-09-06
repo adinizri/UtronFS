@@ -10,7 +10,7 @@ import {
 import Checkout from "./pages/CheckOut/Checkout";
 import CheckIn from "./pages/CheckIn/CheckIn";
 import GarageDisplay from "./pages/GarageDisplay/GarageDisplay";
-import InsertFive from "./pages/InsertFive/insertFive";
+import InsertFive from "./pages/InsertFive/InsertFive";
 
 import TicketVehicles from "./pages/TicketVehicles/TicketVehicles";
 
