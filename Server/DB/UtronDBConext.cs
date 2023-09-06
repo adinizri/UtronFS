@@ -9,11 +9,5 @@ namespace Server.Db
             : base(options) { }
 
         public DbSet<ParkingRecord> ParkingRecords { get; set; }
-
-        // protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        // {
-        //     // Replace "YourConnectionString" with the connection string to your MDF file.
-        //     optionsBuilder.UseSqlServer("Server=localhost;Database=master;Trusted_Connection=True;");
-        // }
     }
 }

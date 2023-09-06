@@ -12,12 +12,13 @@ public class Ticket
     public int Price { get; set; }
     public int TimeLimits { get; set; }
 
-     private readonly UtronDbContext _context;
+    private readonly UtronDbContext _context;
 
     public Ticket(UtronDbContext context)
     {
         _context = context;
     }
+
     public Ticket(
         string type,
         int startLot,
@@ -37,9 +38,7 @@ public class Ticket
         TimeLimits = timeLimits;
     }
 
-
-
-     // get the free parkin lots by ticketType
+    // get the free parkin lots by ticketType
     public async Task<List<int>> GetFreeParkingLotByTicketType(string ticketType)
     {
         try
@@ -65,6 +64,7 @@ public class Ticket
         }
     }
 
+    //return list of ticket that suitable for dimenetions and are avaliable for parking
     public async Task<List<Ticket>> GetSuitableTicketByDimenetions(Dimensions vehicleDimensions)
     {
         try
@@ -96,7 +96,8 @@ public class Ticket
         }
     }
 
-    public async Task<List<string>> GetParkingCarsByTicket(string ticketType)
+    //get vehicles by ticket type
+    public async Task<List<string>> GetParkingVehiclesByTicket(string ticketType)
     {
         try
         {

@@ -64,11 +64,11 @@ public class TicketController : ControllerBase
     }
 
     [HttpGet("ticketParkingCars/{ticketType}")]
-    public async Task<IActionResult> GetParkingCarsByTicket(string ticketType)
+    public async Task<IActionResult> GetParkingVehiclesByTicket(string ticketType)
     {
         try
         {
-            return Ok(await _ticket.GetParkingCarsByTicket(ticketType));
+            return Ok(await _ticket.GetParkingVehiclesByTicket(ticketType));
         }
         catch (Exception ex)
         {

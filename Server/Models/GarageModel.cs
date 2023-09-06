@@ -6,7 +6,7 @@ class GarageModel
 {
     private readonly UtronDbContext _context;
     private readonly Ticket _ticket;
-    private static readonly SemaphoreSlim insertVehicleLock = new(1, 1);
+    private static readonly SemaphoreSlim insertVehicleLock = new(1, 1); //enble us to insert one vehicle at a time to avoid lot number collision
 
     public GarageModel(UtronDbContext context)
     {
@@ -82,6 +82,7 @@ class GarageModel
         }
     }
 
+    //return all vehicles in the garage
     public async Task<List<ParkingRecord>> GetGarageStatus()
     {
         try
