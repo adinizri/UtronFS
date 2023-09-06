@@ -24,14 +24,15 @@ class GarageModel
             );
             if (ticketTypeFreeLots.Count() > 0)
             {
-                ParkingRecord parkingRecord = new ParkingRecord
-                {
-                    LicensePlateID = vehicle.LicensePlateID,
-                    ParkingDateTime = DateTime.Now,
-                    LotNumber = ticketTypeFreeLots[0],
-                    PhoneNumber = vehicle.Phone,
-                    Name = vehicle.Name
-                };
+                ParkingRecord parkingRecord =
+                    new()
+                    {
+                        LicensePlateID = vehicle.LicensePlateID,
+                        ParkingDateTime = DateTime.Now,
+                        LotNumber = ticketTypeFreeLots[0],
+                        PhoneNumber = vehicle.Phone,
+                        Name = vehicle.Name
+                    };
 
                 await _context.ParkingRecords.AddAsync(parkingRecord);
                 await _context.SaveChangesAsync();
@@ -48,17 +49,17 @@ class GarageModel
 
     public async Task<ParkingRecord> CheckoutVehicle(string licensePlateID)
     {
-        ParkingRecord parkingRecord = await _context.ParkingRecords.FindAsync(licensePlateID);
-
-        if (parkingRecord == null)
-        {
-            return parkingRecord;
-        }
-
-        _context.ParkingRecords.Remove(parkingRecord);
-
         try
         {
+            ParkingRecord parkingRecord = await _context.ParkingRecords.FindAsync(licensePlateID);
+
+            if (parkingRecord == null)
+            {
+                return parkingRecord;
+            }
+
+            _context.ParkingRecords.Remove(parkingRecord);
+
             await _context.SaveChangesAsync();
             return parkingRecord;
         }
