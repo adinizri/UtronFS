@@ -19,6 +19,11 @@ public class TicketController : ControllerBase
         _ticket = new(_context);
     }
 
+<<<<<<< HEAD
+=======
+  
+
+>>>>>>> b0679f0991d555bbadf4a2aad5ddb7379e159f30
     [HttpGet("getSuitableTickets")]
     public async Task<IActionResult> GetVehicleTicketsOptions(
         [FromQuery] int height,
@@ -68,7 +73,12 @@ public class TicketController : ControllerBase
     {
         try
         {
+<<<<<<< HEAD
             return Ok(await _ticket.GetParkingCarsByTicket(ticketType));
+=======
+            
+           return Ok(await _ticket.GetParkingCarsByTicket(ticketType));
+>>>>>>> b0679f0991d555bbadf4a2aad5ddb7379e159f30
         }
         catch (Exception ex)
         {
@@ -76,9 +86,13 @@ public class TicketController : ControllerBase
         }
     }
 
+<<<<<<< HEAD
     [HttpGet("Tickets")]
     public IActionResult GetTickets()
     {
         return Ok(Consts.OptionalTickets);
     }
+=======
+
+>>>>>>> b0679f0991d555bbadf4a2aad5ddb7379e159f30
 }
