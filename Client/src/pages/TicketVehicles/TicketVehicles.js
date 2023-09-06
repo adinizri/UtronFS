@@ -21,7 +21,7 @@ const TicketVehicles = () => {
   useEffect(() => {
     async function fetchVehicles() {
       if (ticketType) {
-        const result = await axios.get(`${SERVER_ADRESS}/api/Garage/ticketParkingCars/${ticketType}`, {
+        const result = await axios.get(`${SERVER_ADRESS}/api/Ticket/ticketParkingCars/${ticketType}`, {
           headers: AxiosHeaders,
         });
         setVehicles(result.data);
