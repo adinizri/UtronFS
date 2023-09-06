@@ -21,9 +21,12 @@ const TicketVehicles = () => {
   useEffect(() => {
     async function fetchVehicles() {
       if (ticketType) {
-        const result = await axios.get(`${SERVER_ADRESS}/api/Ticket/ticketParkingCars/${ticketType}`, {
-          headers: AxiosHeaders,
-        });
+        const result = await axios.get(
+          `${SERVER_ADRESS}/api/Ticket/ticketParkingCars/${ticketType}`,
+          {
+            headers: AxiosHeaders,
+          }
+        );
         setVehicles(result.data);
       }
     }
@@ -31,28 +34,31 @@ const TicketVehicles = () => {
   }, [ticketType]);
 
   return (
-    <div className="container">
+    <div className='container'>
       <h2>Show ticket vehicles</h2>
-      <div className="select-container">
+      <div className='select-container'>
         <Select
           showSearch
-          placeholder="Select ticket type"
+          placeholder='Select ticket type'
           onChange={onChange}
           options={createOptions()}
           style={{ width: 200 }} // Adjust the width as needed
         />
       </div>
-      <div className="vehicles-container">
-        {vehicles && (
-          <>
-            <div className="vehicles-label">Vehicles:</div>
-            <div className="vehicle-list">
-              {vehicles.map((vehicle) => (
-                <p key={vehicle}>{vehicle}</p>
-              ))}
-            </div>
-          </>
-        )}
+      <div className='vehicles-container'>
+        {vehicles &&
+          (vehicles.length > 0 ? (
+            <>
+              <div className='vehicles-label'>Vehicles:</div>
+              <div className='vehicle-list'>
+                {vehicles.map((vehicle) => (
+                  <p key={vehicle}>{vehicle}</p>
+                ))}
+              </div>
+            </>
+          ) : (
+            <div>there are not vehicle with this ticket</div>
+          ))}
       </div>
     </div>
   );
