@@ -32,21 +32,25 @@ const GarageDisplay = () => {
           <p>Error: {error.message}</p>
         ) : data ? (
           <Row gutter={16}>
-            {data.map((item, index) => (
-              <Col
-                span={8}
-                key={index}>
-                <Card
-                  title={`Card ${index}`}
-                  style={{ marginBottom: "16px" }}>
-                  {Object.keys(item).map((key) => (
-                    <div key={key}>
-                      <strong>{key}:</strong> {item[key]}
-                    </div>
-                  ))}
-                </Card>
-              </Col>
-            ))}
+            {data.map((item, index) =>
+              data.length > 0 ? (
+                <Col
+                  span={4}
+                  key={index}>
+                  <Card
+                    title={`vehicle ID: ${item.licensePlateID}`}
+                    className='vehicle-card'>
+                    {Object.keys(item).map((key) => (
+                      <div key={key}>
+                        <strong>{key}:</strong> {item[key]}
+                      </div>
+                    ))}
+                  </Card>
+                </Col>
+              ) : (
+                <div>The Garage is Empthy</div>
+              )
+            )}
           </Row>
         ) : null}
       </div>

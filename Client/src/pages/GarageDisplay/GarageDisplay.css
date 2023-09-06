@@ -10,3 +10,8 @@
 .garage-display-content {
     text-align: center;
 }
+
+.vehicle-card{
+    margin-bottom: 16px;
+    text-align: left;
+}

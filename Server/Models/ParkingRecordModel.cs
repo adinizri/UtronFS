@@ -9,6 +9,7 @@ public class ParkingRecord
     [Key]
     public string LicensePlateID { get; set; }
 
+    [Column(TypeName = "datetime2")]
     [Required]
     public DateTime ParkingDateTime { get; set; }
 
