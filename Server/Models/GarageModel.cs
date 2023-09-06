@@ -10,7 +10,7 @@ class GarageModel
     public GarageModel(UtronDbContext context)
     {
         _context = context;
-        _ticket=new Ticket(context);
+        _ticket = new Ticket(context);
     }
 
     //checkin in a vehicle
@@ -18,9 +18,10 @@ class GarageModel
     {
         try
         {
-            
             // check if there free lots
-            List<int> ticketTypeFreeLots = await Ticket.GetFreeParkingLotByTicketType(vehicle.TicketType);
+            List<int> ticketTypeFreeLots = await _ticket.GetFreeParkingLotByTicketType(
+                vehicle.TicketType
+            );
             if (ticketTypeFreeLots.Count() > 0)
             {
                 ParkingRecord parkingRecord = new ParkingRecord
@@ -66,8 +67,6 @@ class GarageModel
             throw;
         }
     }
-
-   
 
     public async Task<List<ParkingRecord>> GetGarageStatus()
     {
