@@ -3,8 +3,8 @@ node_modules/
 # Ignore files and directories in the Server folder
 
 # Server-specific build output
-Server/bin/
-Server/obj/
+**/Server/bin/
+**/Server/obj/
 
 # User-specific files
 Server/*.suo
