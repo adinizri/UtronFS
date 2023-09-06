@@ -6,7 +6,7 @@ class GarageModel
 {
     private readonly UtronDbContext _context;
     private readonly Ticket _ticket;
-    private static readonly SemaphoreSlim parkingSpotLock = new(1, 1);
+    private static readonly SemaphoreSlim insertVehicleLock = new(1, 1);
 
     public GarageModel(UtronDbContext context)
     {
@@ -20,7 +20,7 @@ class GarageModel
     {
         try
         {
-            await parkingSpotLock.WaitAsync();
+            await insertVehicleLock.WaitAsync();
 
             try
             {
@@ -50,7 +50,7 @@ class GarageModel
             }
             finally
             {
-                parkingSpotLock.Release();
+                insertVehicleLock.Release();
             }
         }
         catch (Exception ex)
