@@ -1,0 +1,12 @@
+
+.garage-display-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    height: 100vh;
+  
+}
+
+.garage-display-content {
+    text-align: center;
+}
