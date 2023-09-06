@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "+uzhkIaaMrcOOE/sSt+3K2kzerYmWQYehwyX0ApCCvj6EbuhI7eX5LYWLlAKWuUQxk3bDCp/jU8sPzi34ZdMGA==",
+  "dgSpecHash": "yzR751vd+VjxS+qG7z2Vtfr1IyTmpW8zFrsUKG2Hd+Wm+DPKgYONbrVneGTYVH3m3hCbxnUTc1ZBkn5dYgOgpA==",
   "success": true,
-  "projectFilePath": "D:\\Code\\Utron\\Server\\Server.csproj",
+  "projectFilePath": "C:\\Users\\user\\Desktop\\New folder\\UtronFS\\Server\\Server.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\user\\.nuget\\packages\\azure.core\\1.24.0\\azure.core.1.24.0.nupkg.sha512",
     "C:\\Users\\user\\.nuget\\packages\\azure.identity\\1.6.0\\azure.identity.1.6.0.nupkg.sha512",
